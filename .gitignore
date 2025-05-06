@@ -1,0 +1,6 @@
+output/**
+.hypothesis/**
+__pycache__/**
+playground/**
+apps/**
+backup/**

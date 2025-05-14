@@ -89,7 +89,7 @@ $t = 0
 
 while ($t -lt $Times) {
     if (-not $OutputDir) {
-        $OutputDir = "output/$apkPackageName/$(Get-Date -Format "yyyy-MM-ddTHH.mm.ss")"
+        $OutputDir = "output/$apkPackageName/$Policy-$(Get-Date -Format "yyyy-MM-ddTHH.mm.ss")"
     }
 
     mkdir $OutputDir -Force
@@ -107,13 +107,13 @@ while ($t -lt $Times) {
 
     Write-Host "Logcat process started."
 
-    $dumpProcess = Start-Process -FilePath "pwsh" -ArgumentList "dump.ps1 -PackageName $apkPackageName -OutputDir $OutputDir/tmp" -NoNewWindow -PassThru -RedirectStandardOutput "$OutputDir/dump.log" -RedirectStandardError "$OutputDir/dump.err.log"
+    $dumpProcess = Start-Process -FilePath "pwsh" -ArgumentList "dump.ps1 -PackageName $apkPackageName -OutputDir $OutputDir/tmp -DeviceName $DeviceName" -NoNewWindow -PassThru -RedirectStandardOutput "$OutputDir/dump.log" -RedirectStandardError "$OutputDir/dump.err.log"
 
     Write-Host "Dump process started."
 
     Write-Host "Starting kea at $(Get-Date -Format "yyyy-MM-ddTHH:mm:ss")"
 
-    kea -d $deviceName -a $ApkPath -o $OutputDir/kea -t $TimeOut -grant_perm -is_emulator -disable_rotate -p $Policy -f fake.py -utg --limit $Limit 2>&1 | tee -FilePath $OutputDir/kea.log
+    kea -d $deviceName -a $ApkPath -o $OutputDir/kea -t $TimeOut -grant_perm -is_emulator -disable_rotate -p $Policy -f fake.py -utg --limit $Limit 2>&1 | Tee-Object -FilePath $OutputDir/kea.log
 
     Write-Host "Kea process finished at $(Get-Date -Format "yyyy-MM-ddTHH:mm:ss")"
 
